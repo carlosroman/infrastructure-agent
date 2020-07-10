@@ -1,5 +1,6 @@
 // Copyright 2020 New Relic Corporation. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+
 package delta
 
 import (
@@ -37,10 +38,12 @@ const (
 	NO_DELTA_ID               = 0
 	localEntityFolder         = "__nria_localentity"
 	DisableInventorySplit     = 0
+	lastSuccessSubmissionFile = "last_success"
 )
 
 var EMPTY_DELTA = []byte{'{', '}'}
 var NULL = []byte{'n', 'u', 'l', 'l'}
+var ErrNoPreviousSuccessSubmissionTime = fmt.Errorf("no previous success submission time")
 
 var slog = log.WithComponent("Delta Store")
 
@@ -87,6 +90,8 @@ type Store struct {
 	CacheDir string
 	// NextIDMap stores the information about the available plugins
 	NextIDMap pluginIDMap
+	// stores time of last success submission of inventory to backend
+	lastSuccessSubmission time.Time
 }
 
 // NewStore creates a new Store and returns a pointer to it. If maxInventorySize <= 0, the inventory splitting is disabled
