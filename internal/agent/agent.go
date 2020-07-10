@@ -526,6 +526,10 @@ func (a *Agent) registerEntityInventory(entityKey string) error {
 		inv.sender, err = newPatchSender(entityKey, a.Context, a.store, a.userAgent, a.Context.AgentIdentity, a.httpClient)
 	}
 	if err != nil {
+		alog.
+			WithField("entityKey", entityKey).
+			WithError(err).
+			Info("Got an error registering inventory for entity.")
 		return err
 	}
 
