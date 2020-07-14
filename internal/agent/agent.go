@@ -554,10 +554,6 @@ func (a *Agent) registerEntityInventory(entityKey string) error {
 		inv.sender, err = newPatchSender(entityKey, a.Context, a.store, a.lastSubmissionStore, a.userAgent, a.Context.AgentIdentity, a.httpClient)
 	}
 	if err != nil {
-		alog.
-			WithField("entityKey", entityKey).
-			WithError(err).
-			Info("Got an error registering inventory for entity.")
 		return err
 	}
 
@@ -1018,10 +1014,7 @@ func (a *Agent) removeOutdatedEntities(reportedEntities map[string]bool) {
 }
 
 func (c *context) SendData(data PluginOutput) {
-	slog := alog.WithField("dataId", data.Id)
-	slog.Info("Sending data")
 	c.ch <- data
-	slog.Info("Sending data done")
 }
 
 func (c *context) ActiveEntitiesChannel() chan string {

@@ -15,8 +15,6 @@ import (
 	"github.com/newrelic/infrastructure-agent/pkg/plugins/ids"
 )
 
-var plog = log.WithComponent("AgentPlugin")
-
 // Plugin describes the interface all agent plugins implement
 type Plugin interface {
 	Run()
@@ -102,9 +100,9 @@ func (self *PluginCommon) IsExternal() bool {
 // for the external plugins it logs the data specified in the log fields.
 func (self *PluginCommon) LogInfo() {
 	if self.IsExternal() {
-		plog.WithFieldsF(self.DetailedLogFields).Info("Integration info")
+		log.WithFieldsF(self.DetailedLogFields).Info("Integration info")
 	} else {
-		plog.WithPlugin(self.Id().String()).Info("Agent plugin")
+		log.WithPlugin(self.Id().String()).Info("Agent plugin")
 	}
 }
 
@@ -120,7 +118,6 @@ type PluginEmitter interface {
 
 // EmitInventory sends data collected by the plugin to the agent
 func (self *PluginCommon) EmitInventory(data PluginInventoryDataset, entityKey string) {
-	plog.WithField("pluginId", self.ID).WithField("data", data).WithField("entityKey", entityKey).Info("Emitting inventory")
 	self.Context.SendData(NewPluginOutput(self.ID, entityKey, data))
 }
 
@@ -161,9 +158,9 @@ func (self *PluginCommon) ScheduleHealthCheck() {
 	// it means a health check has already been scheduled.
 	select {
 	case self.HealthCheckCh <- struct{}{}:
-		plog.WithFields(self.LogFields).Info("Integration health check scheduled")
+		log.WithFields(self.LogFields).Info("Integration health check scheduled")
 	default:
-		plog.WithFields(self.LogFields).Info("Integration health check already requested")
+		log.WithFields(self.LogFields).Info("Integration health check already requested")
 	}
 }
 
