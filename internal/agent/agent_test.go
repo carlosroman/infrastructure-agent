@@ -423,11 +423,11 @@ func TestCheckConnectionTimeout(t *testing.T) {
 func TestCheckNetworkNoTimeout(t *testing.T) {
 	retval := make(chan error, 1)
 
-	go func() {
-		// Given a server that always returns timeouts
-		ts := NewTimeoutServer(-1)
-		defer ts.Cancel()
+	// Given a server that always returns timeouts
+	ts := NewTimeoutServer(-1)
+	defer ts.Cancel()
 
+	go func() {
 		cnf := &config.Config{
 			CollectorURL:             ts.server.URL,
 			StartupConnectionRetries: -1,
